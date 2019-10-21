@@ -2,4 +2,4 @@
 
 [Check out our wiki for the instructions.](https://github.com/3778/ml-challenge/wiki)
 
-Make sure you Star this repo. to receive notifications of updates to the challenge!
+Help us by starring this repository!
