@@ -7,5 +7,5 @@ setup(name='challenge',
       author='3778 Data Science',
       author_email='datascience@3778.care',
       packages=find_packages(),
-      install_requires = ['pandas>=0.25.2', 'pytest', 'sklearn'],
+      install_requires = ['pandas>=0.25.2', 'pytest', 'sklearn', 'numpy'],
       zip_safe=False)
