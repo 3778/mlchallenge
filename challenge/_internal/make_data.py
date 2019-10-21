@@ -5,7 +5,7 @@ import logging
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = PROJECT_ROOT / "data"
-testing_years = [2013, 2014, 2015]
+evaluating_years = [2013, 2014, 2015]
 
 fmt = "%(asctime)s %(name)-12s %(levelname)-8s %(message)s"
 logging.basicConfig(level="INFO", format=fmt)
@@ -44,7 +44,7 @@ if __name__ == '__main__':
     # guarantee at least one point for testing
     logger.info("Filtering tidy dataframe.")
     candidates = (tidy
-                  .query("year.isin(@testing_years)")
+                  .query("year.isin(@evaluating_years)")
                   .dropna()
                   [lambda df: df['value'].notnull()]
                   .set_index(['indicator', 'country'])
@@ -70,15 +70,15 @@ if __name__ == '__main__':
                      .reset_index())
 
     # create training and testing dataframes
-    logger.info("Creating test.csv")
-    test = (tidy_filtered
-            .query("year.isin(@testing_years)")
-            .reset_index(drop=True))
+    logger.info("Creating evaluate.csv")
+    evaluate = (tidy_filtered
+                .query("year.isin(@evaluating_years)")
+                .reset_index(drop=True))
 
-    logger.info("Creating train.csv")
-    train = (tidy_filtered
-             .query("~year.isin(@testing_years)")
-             .reset_index(drop=True))
+    logger.info("Creating data.csv")
+    data = (tidy_filtered
+            .query("~year.isin(@evaluating_years)")
+            .reset_index(drop=True))
 
     # Sanity checks
     logger.info("Running sanity checks")
@@ -91,8 +91,9 @@ if __name__ == '__main__':
                            train[['indicator', 'country', 'year']]])
                   .duplicated()
                   .any())
+    assert len(data) > len(evaluate)
 
     # save data
-    logger.info(f"Saving {DATA_DIR}/{{test,train}}.csv")
-    test.to_csv(DATA_DIR / 'test.csv', index=False)
-    train.to_csv(DATA_DIR / 'train.csv', index=False)
+    logger.info(f"Saving {DATA_DIR}/{{data,evaluate}}.csv")
+    evaluate.to_csv(DATA_DIR / 'evaluate.csv', index=False)
+    data.to_csv(DATA_DIR / 'data.csv', index=False)
