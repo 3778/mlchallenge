@@ -95,5 +95,5 @@ if __name__ == '__main__':
 
     # save data
     logger.info(f"Saving {DATA_DIR}/{{test,train}}.csv")
-    test.to_csv(DATA_DIR / 'test.csv')
-    train.to_csv(DATA_DIR / 'train.csv')
+    test.to_csv(DATA_DIR / 'test.csv', index=False)
+    train.to_csv(DATA_DIR / 'train.csv', index=False)
