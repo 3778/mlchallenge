@@ -1,10 +1,8 @@
-from pathlib import Path
+from challenge import DATA_DIR
 import pandas as pd
 import numpy as np
 import logging
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-DATA_DIR = PROJECT_ROOT / "data"
 evaluating_years = [2013, 2014, 2015]
 
 fmt = "%(asctime)s %(name)-12s %(levelname)-8s %(message)s"
@@ -87,8 +85,8 @@ if __name__ == '__main__':
     assert tidy_filtered['indicator'].nunique() == 321
     assert len(mask) == 56163
     assert not tidy_filtered.duplicated(subset=['indicator', 'country', 'year']).any()
-    assert not (pd.concat([test[['indicator', 'country', 'year']], 
-                           train[['indicator', 'country', 'year']]])
+    assert not (pd.concat([data[['indicator', 'country', 'year']], 
+                           evaluate[['indicator', 'country', 'year']]])
                   .duplicated()
                   .any())
     assert len(data) > len(evaluate)

@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import sklearn.metrics as sklearn_metrics
+from challenge import DATA_DIR
 
 
 def evaluate_regression(y_pred):
@@ -15,11 +16,11 @@ def evaluate_regression(y_pred):
     Returns:
         dict: Evaluation results on multiple metrics.
     """
-    y_true = pd.read_csv('data/answers.csv')
+    path = DATA_DIR / 'evaluate.csv'
+    y_true = pd.read_csv(path, dtype={'value': float})['value']
     metrics_to_evaluate = ['explained_variance_score',
                            'mean_absolute_error',
                            'mean_squared_error',
-                           'mean_squared_log_error',
                            'median_absolute_error',
                            'r2_score']
     return {m: getattr(sklearn_metrics, m)(y_true, y_pred)

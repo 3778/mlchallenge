@@ -1,2 +1,4 @@
 data/*
 !data/.gitkeep
+*pytest_cache*
+*.egg*
