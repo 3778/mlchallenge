@@ -16,7 +16,7 @@ def evaluate_regression(y_pred):
     Returns:
         dict: Evaluation results on multiple metrics.
     """
-    path = DATA_DIR / 'evaluate.csv'
+    path = DATA_DIR / 'answers.csv'
     y_true = pd.read_csv(path, dtype={'value': float})['value']
     metrics_to_evaluate = ['explained_variance_score',
                            'mean_absolute_error',

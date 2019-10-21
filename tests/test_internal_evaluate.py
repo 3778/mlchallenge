@@ -6,7 +6,7 @@ import numpy as np
 np.random.seed(3778)
 
 def test_evaluate_regression_perfect():
-    path = DATA_DIR / 'evaluate.csv'
+    path = DATA_DIR / 'answers.csv'
     y_pred = pd.read_csv(path, dtype={'value': float})['value']
     expected = {'explained_variance_score': 1,
                 'mean_absolute_error': 0,
@@ -17,7 +17,7 @@ def test_evaluate_regression_perfect():
 
 
 def test_evaluate_regression_random():
-    path = DATA_DIR / 'evaluate.csv'
+    path = DATA_DIR / 'answers.csv'
     y_pred = (pd.read_csv(path, dtype={'value': float})
               ['value']
               .sample(frac=1.0, replace=False))
@@ -28,7 +28,7 @@ def test_evaluate_regression_random():
 
 
 def test_evaluate_regression_mean():
-    path = DATA_DIR / 'evaluate.csv'
+    path = DATA_DIR / 'answers.csv'
     y_pred = (pd.read_csv(path, dtype={'value': float})
               .assign(value=lambda df: df['value'].mean())
               ['value'])

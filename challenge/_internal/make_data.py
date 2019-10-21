@@ -68,15 +68,19 @@ if __name__ == '__main__':
                      .reset_index())
 
     # create training and testing dataframes
-    logger.info("Creating evaluate.csv")
-    evaluate = (tidy_filtered
-                .query("year.isin(@evaluating_years)")
-                .reset_index(drop=True))
+    logger.info("Creating answers.csv")
+    answers = (tidy_filtered
+               .query("year.isin(@evaluating_years)")
+               .reset_index(drop=True))
 
     logger.info("Creating data.csv")
     data = (tidy_filtered
             .query("~year.isin(@evaluating_years)")
             .reset_index(drop=True))
+
+    logger.info("Creating test.csv")
+    test = answers.drop(columns=['value'])
+
 
     # Sanity checks
     logger.info("Running sanity checks")
@@ -86,12 +90,13 @@ if __name__ == '__main__':
     assert len(mask) == 56163
     assert not tidy_filtered.duplicated(subset=['indicator', 'country', 'year']).any()
     assert not (pd.concat([data[['indicator', 'country', 'year']], 
-                           evaluate[['indicator', 'country', 'year']]])
+                           test[['indicator', 'country', 'year']]])
                   .duplicated()
                   .any())
-    assert len(data) > len(evaluate)
+    assert len(data) > len(test)
 
     # save data
-    logger.info(f"Saving {DATA_DIR}/{{data,evaluate}}.csv")
-    evaluate.to_csv(DATA_DIR / 'evaluate.csv', index=False)
+    logger.info(f"Saving {DATA_DIR}/{{data,test,answers}}.csv")
+    test.to_csv(DATA_DIR / 'test.csv', index=False)
     data.to_csv(DATA_DIR / 'data.csv', index=False)
+    answers.to_csv(DATA_DIR / 'answers.csv', index=False)
