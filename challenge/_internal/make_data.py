@@ -1,13 +1,48 @@
-from challenge import DATA_DIR
+from . import DATA_DIR
+from .evaluate import evaluate_regression
 import pandas as pd
 import numpy as np
 import logging
 
-evaluating_years = [2013, 2014, 2015]
+np.random.seed(3778)
 
+evaluating_years = [2013, 2014, 2015]
 fmt = "%(asctime)s %(name)-12s %(levelname)-8s %(message)s"
 logging.basicConfig(level="INFO", format=fmt)
 logger = logging.getLogger("make_data")
+
+def test_evaluate_regression_perfect():
+    path = DATA_DIR / 'answers.csv'
+    y_pred = pd.read_csv(path, dtype={'value': float})['value']
+    expected = {'explained_variance_score': 1,
+                'mean_absolute_error': 0,
+                'mean_squared_error': 0,
+                'median_absolute_error': 0,
+                'r2_score': 1}
+    assert evaluate_regression(y_pred) == expected
+
+
+def test_evaluate_regression_random():
+    path = DATA_DIR / 'answers.csv'
+    y_pred = (pd.read_csv(path, dtype={'value': float})
+              ['value']
+              .sample(frac=1.0, replace=False))
+    r = evaluate_regression(y_pred)
+    
+    assert np.isclose(r['explained_variance_score'], -1, rtol=0, atol=1e-2)
+    assert np.isclose(r['r2_score'], -1, rtol=0, atol=1e-2)
+
+
+def test_evaluate_regression_mean():
+    path = DATA_DIR / 'answers.csv'
+    y_pred = (pd.read_csv(path, dtype={'value': float})
+              .assign(value=lambda df: df['value'].mean())
+              ['value'])
+              
+    r = evaluate_regression(y_pred)
+    
+    assert np.isclose(r['explained_variance_score'], 0)
+    assert np.isclose(r['r2_score'], 0)
 
 if __name__ == '__main__':
     logger.info("Loading HNP_StatsData.csv")
@@ -100,3 +135,9 @@ if __name__ == '__main__':
     test.to_csv(DATA_DIR / 'test.csv', index=False)
     data.to_csv(DATA_DIR / 'data.csv', index=False)
     answers.to_csv(DATA_DIR / 'answers.csv', index=False)
+
+    # Running tests
+    logger.info('Running evaluation tests')
+    test_evaluate_regression_perfect()
+    test_evaluate_regression_random()
+    test_evaluate_regression_mean()

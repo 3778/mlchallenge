@@ -1,7 +1,7 @@
+from . import DATA_DIR
 import pandas as pd
 import numpy as np
 import sklearn.metrics as sklearn_metrics
-from challenge import DATA_DIR
 
 
 def evaluate_regression(y_pred):
